@@ -1,4 +1,14 @@
 .slider
 {
+  margin:50x auto; width: 50%;
+}
+
+.img-box img
+{
+  width:100%;
+}
+
+.btn
+{
   
 }
