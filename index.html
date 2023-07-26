@@ -40,11 +40,18 @@
         });
 
         function showRow(rowNumber) {
-            if (rowNumber < 0 || rowNumber >= arrItems.length) {
-                // If the row number is out of range, show a message or take any desired action.
+            if (arrItems.length === 0) {
+                // If the data is empty, show a message or take any desired action.
                 var divContainer = document.getElementById("showData");
-                divContainer.innerHTML = "<p>No more rows to display.</p>";
+                divContainer.innerHTML = "<p>No data to display.</p>";
                 return;
+            }
+
+            // Ensure looping behavior for the row number
+            if (rowNumber < 0) {
+                rowNumber = arrItems.length - 1;
+            } else if (rowNumber >= arrItems.length) {
+                rowNumber = 0;
             }
 
             var col = [];
