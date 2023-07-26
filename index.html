@@ -22,7 +22,10 @@
     </style>
 </head>
 <body>
-    <p><input type="button" onclick="showNextRow()" value="Show Images" /></p>
+    <p>
+        <input type="button" onclick="showPreviousRow()" value="Previous" />
+        <input type="button" onclick="showNextRow()" value="Next" />
+    </p>
     <div id='showData'></div>
 
     <script>
@@ -32,19 +35,20 @@
         $(document).ready(function () {
             $.getJSON("data-with-image.json", function (data) {
                 arrItems = data;
+                showRow(currentRow);
             });
         });
 
-        function showNextRow() {
-            if (currentRow >= arrItems.length) {
-                // If we reached the end of the data, show a message or take any desired action.
+        function showRow(rowNumber) {
+            if (rowNumber < 0 || rowNumber >= arrItems.length) {
+                // If the row number is out of range, show a message or take any desired action.
                 var divContainer = document.getElementById("showData");
                 divContainer.innerHTML = "<p>No more rows to display.</p>";
                 return;
             }
 
             var col = [];
-            for (var key in arrItems[currentRow]) {
+            for (var key in arrItems[rowNumber]) {
                 if (col.indexOf(key) === -1) {
                     col.push(key);
                 }
@@ -64,18 +68,26 @@
                 var tabCell = tr.insertCell(-1);
                 if (j === 2) {
                     var img = document.createElement('img');
-                    img.src = arrItems[currentRow].Image;
+                    img.src = arrItems[rowNumber].Image;
                     tabCell.appendChild(img);
                 } else {
-                    tabCell.innerHTML = arrItems[currentRow][col[j]];
+                    tabCell.innerHTML = arrItems[rowNumber][col[j]];
                 }
             }
-
-            currentRow++;
 
             var divContainer = document.getElementById("showData");
             divContainer.innerHTML = "";
             divContainer.appendChild(table);
+        }
+
+        function showPreviousRow() {
+            currentRow--;
+            showRow(currentRow);
+        }
+
+        function showNextRow() {
+            currentRow++;
+            showRow(currentRow);
         }
     </script>
 </body>
