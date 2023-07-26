@@ -4,20 +4,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 
     <style>
-        table 
-        {
+        table {
             width: 300px;
             font: 17px Calibri;
         }
-        table, th, td 
-        {
+        table, th, td {
             border: solid 1px #DDD;
             border-collapse: collapse;
             padding: 2px 3px;
             text-align: center;
         }
-        table img 
-        {
+        table img {
             border: none;
             width: 51px;
             height: 51px;
@@ -25,8 +22,61 @@
     </style>
 </head>
 <body>
-    <p><input type="button" onclick="imagesFromJSON()" value="Show Images" /></p>
+    <p><input type="button" onclick="showNextRow()" value="Show Images" /></p>
     <div id='showData'></div>
 
-    <script src="main.js"></script>
+    <script>
+        var arrItems = [];
+        var currentRow = 0;
+
+        $(document).ready(function () {
+            $.getJSON("data-with-image.json", function (data) {
+                arrItems = data;
+            });
+        });
+
+        function showNextRow() {
+            if (currentRow >= arrItems.length) {
+                // If we reached the end of the data, show a message or take any desired action.
+                var divContainer = document.getElementById("showData");
+                divContainer.innerHTML = "<p>No more rows to display.</p>";
+                return;
+            }
+
+            var col = [];
+            for (var key in arrItems[currentRow]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+
+            var table = document.createElement("table");
+
+            var tr = table.insertRow(-1);
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th");
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            tr = table.insertRow(-1);
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                if (j === 2) {
+                    var img = document.createElement('img');
+                    img.src = arrItems[currentRow].Image;
+                    tabCell.appendChild(img);
+                } else {
+                    tabCell.innerHTML = arrItems[currentRow][col[j]];
+                }
+            }
+
+            currentRow++;
+
+            var divContainer = document.getElementById("showData");
+            divContainer.innerHTML = "";
+            divContainer.appendChild(table);
+        }
+    </script>
 </body>
+</html>
